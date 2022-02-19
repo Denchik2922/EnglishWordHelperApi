@@ -1,4 +1,5 @@
 using DAL;
+using EnglishWordHelperApi.Infrastructure.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -49,8 +50,10 @@ namespace EnglishWordHelperApi
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<IdentityUser> userManager)
 		{
+			DbInitializerHelper.SeedAdmins(userManager, Configuration);
+
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
