@@ -1,5 +1,9 @@
+using DAL;
+using EnglishWordHelperApi.Infrastructure.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,9 +13,13 @@ namespace EnglishWordHelperApi
 {
 	public class Startup
 	{
+		public string ConnectionString { get; }
+
 		public Startup(IConfiguration configuration)
 		{
 			Configuration = configuration;
+
+			ConnectionString = Configuration.GetConnectionString("DefaultConnection");
 		}
 
 		public IConfiguration Configuration { get; }
@@ -25,11 +33,27 @@ namespace EnglishWordHelperApi
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "EnglishWordHelperApi", Version = "v1" });
 			});
+
+			//DB Connection
+			services.AddDbContext<EnglishContext>(options =>
+			   options.UseSqlServer(ConnectionString));
+
+			//Identity setting
+			services.AddIdentity<IdentityUser, IdentityRole>()
+			   .AddEntityFrameworkStores<EnglishContext>();
+
+			services.Configure<IdentityOptions>(options =>
+			{
+				options.User.RequireUniqueEmail = true;
+				options.User.AllowedUserNameCharacters = null;
+			});
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<IdentityUser> userManager)
 		{
+			DbInitializerHelper.SeedAdmins(userManager, Configuration);
+
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
