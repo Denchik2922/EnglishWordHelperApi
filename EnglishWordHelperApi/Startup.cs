@@ -1,5 +1,8 @@
+using BLL.Interfaces;
+using BLL.Services;
 using DAL;
 using EnglishWordHelperApi.Infrastructure.Helpers;
+using EnglishWordHelperApi.Infrastructure.Profiles;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -47,6 +50,17 @@ namespace EnglishWordHelperApi
 				options.User.RequireUniqueEmail = true;
 				options.User.AllowedUserNameCharacters = null;
 			});
+
+			//Services
+			services.AddScoped<IWordService, WordService>();
+
+			//AutoMapper profiles
+			services.AddAutoMapper(typeof(WordProfile),
+								   typeof(WordAudioProfile),
+								   typeof(WordPictureProfile),
+								   typeof(WordExampleProfile),
+								   typeof(WordTranscriptionProfile),
+								   typeof(WordTranslateProfile));
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
