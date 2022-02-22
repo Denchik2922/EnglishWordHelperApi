@@ -3,6 +3,7 @@ using BLL.Services;
 using DAL;
 using EnglishWordHelperApi.Infrastructure.Helpers;
 using EnglishWordHelperApi.Infrastructure.Profiles;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -10,19 +11,30 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Models;
+using System.Text;
 
 namespace EnglishWordHelperApi
 {
 	public class Startup
 	{
 		public string ConnectionString { get; }
+		public string JwtValidIssuer { get; }
+		public string JwtValidAudience { get; }
+		public string JwtSecret { get; }
 
 		public Startup(IConfiguration configuration)
 		{
 			Configuration = configuration;
 
 			ConnectionString = Configuration.GetConnectionString("DefaultConnection");
+
+			JwtValidIssuer = Configuration["JWTSettings:validIssuer"];
+			JwtValidAudience = Configuration["JWTSettings:validAudience"];
+			JwtSecret = Configuration["JWTSettings:Secret"];
+
 		}
 
 		public IConfiguration Configuration { get; }
@@ -42,7 +54,7 @@ namespace EnglishWordHelperApi
 			   options.UseSqlServer(ConnectionString));
 
 			//Identity setting
-			services.AddIdentity<IdentityUser, IdentityRole>()
+			services.AddIdentity<AppUser, IdentityRole>()
 			   .AddEntityFrameworkStores<EnglishContext>();
 
 			services.Configure<IdentityOptions>(options =>
@@ -51,8 +63,31 @@ namespace EnglishWordHelperApi
 				options.User.AllowedUserNameCharacters = null;
 			});
 
+			//Configure jwt authentication
+			services.AddAuthentication(opt =>
+			{
+				opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+			})
+			.AddJwtBearer(options =>
+			{
+				options.TokenValidationParameters = new TokenValidationParameters
+				{
+					ValidateIssuer = true,
+					ValidateAudience = true,
+					ValidateLifetime = true,
+					ValidateIssuerSigningKey = true,
+
+					ValidIssuer = JwtValidIssuer,
+					ValidAudience = JwtValidAudience,
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtSecret))
+				};
+			});
+
 			//Services
 			services.AddScoped<IWordService, WordService>();
+			services.AddScoped<ITokenService, TokenService>();
+			services.AddScoped<IAuthService, AuthService>();
 
 			//AutoMapper profiles
 			services.AddAutoMapper(typeof(WordProfile),
@@ -64,7 +99,7 @@ namespace EnglishWordHelperApi
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<IdentityUser> userManager)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<AppUser> userManager)
 		{
 			DbInitializerHelper.SeedAdmins(userManager, Configuration);
 
@@ -80,6 +115,7 @@ namespace EnglishWordHelperApi
 			app.UseRouting();
 
 			app.UseAuthorization();
+			app.UseAuthentication();
 
 			app.UseEndpoints(endpoints =>
 			{

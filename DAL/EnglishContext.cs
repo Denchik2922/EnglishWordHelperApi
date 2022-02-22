@@ -6,7 +6,7 @@ using Models;
 
 namespace DAL
 {
-	public class EnglishContext : IdentityDbContext<IdentityUser>
+	public class EnglishContext : IdentityDbContext<AppUser>
 	{
 		public EnglishContext(DbContextOptions<EnglishContext> options) : base(options) { }
 

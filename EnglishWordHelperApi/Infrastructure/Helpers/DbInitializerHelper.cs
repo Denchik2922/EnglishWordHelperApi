@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Models;
 
 namespace EnglishWordHelperApi.Infrastructure.Helpers
 {
     public static class DbInitializerHelper
     {
-        public static void SeedAdmins(UserManager<IdentityUser> userManager, IConfiguration configuration)
+        public static void SeedAdmins(UserManager<AppUser> userManager, IConfiguration configuration)
         {
             var email = configuration["Admins:Denis:Email"];
             var userName = configuration["Admins:Denis:UserName"];
@@ -13,7 +14,7 @@ namespace EnglishWordHelperApi.Infrastructure.Helpers
 
             if (userManager.FindByEmailAsync(email).Result == null)
             {
-                IdentityUser user = new IdentityUser
+                AppUser user = new AppUser
                 {
                     UserName = userName,
                     Email = email
