@@ -9,6 +9,10 @@ namespace DAL.Configurations
         public void Configure(EntityTypeBuilder<WordPicture> builder)
         {
             builder.Property(w => w.PictureUrl).IsRequired();
+
+            builder.HasOne(we => we.Word)
+                   .WithMany(w => w.Pictures)
+                   .HasForeignKey(w => w.WordId);
         }
     }
 }

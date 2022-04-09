@@ -48,15 +48,15 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f8af8709-6321-437a-9d2c-3566b62383dd",
-                            ConcurrencyStamp = "c770e7bb-d00f-4dd5-af99-e3c1d1ab5de5",
+                            Id = "a14dac9e-4399-4cf0-b967-ad5d8fad22a6",
+                            ConcurrencyStamp = "41192755-8aec-41fa-8368-d55fc8d4b790",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "6a754876-961a-4d25-9237-738383b3a23b",
-                            ConcurrencyStamp = "de0f0808-e3f6-469f-aac7-cbcfcbdea3fe",
+                            Id = "04260d8f-9806-4a9a-abfe-3665aa2d8c91",
+                            ConcurrencyStamp = "31df05b6-b6ac-4759-95b1-68db3accf3a6",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -455,7 +455,7 @@ namespace DAL.Migrations
             modelBuilder.Entity("Models.WordAudio", b =>
                 {
                     b.HasOne("Models.Word", "Word")
-                        .WithOne("WordAudio")
+                        .WithOne("Audio")
                         .HasForeignKey("Models.WordAudio", "WordId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -466,7 +466,7 @@ namespace DAL.Migrations
             modelBuilder.Entity("Models.WordExample", b =>
                 {
                     b.HasOne("Models.Word", "Word")
-                        .WithMany("WordExamples")
+                        .WithMany("Examples")
                         .HasForeignKey("WordId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -477,7 +477,7 @@ namespace DAL.Migrations
             modelBuilder.Entity("Models.WordPicture", b =>
                 {
                     b.HasOne("Models.Word", "Word")
-                        .WithMany("WordPictures")
+                        .WithMany("Pictures")
                         .HasForeignKey("WordId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -488,7 +488,7 @@ namespace DAL.Migrations
             modelBuilder.Entity("Models.WordTranscription", b =>
                 {
                     b.HasOne("Models.Word", "Word")
-                        .WithOne("WordTranscription")
+                        .WithOne("Transcription")
                         .HasForeignKey("Models.WordTranscription", "WordId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -499,7 +499,7 @@ namespace DAL.Migrations
             modelBuilder.Entity("Models.WordTranslate", b =>
                 {
                     b.HasOne("Models.Word", "Word")
-                        .WithMany("WordTranslates")
+                        .WithMany("Translates")
                         .HasForeignKey("WordId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -509,15 +509,15 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("Models.Word", b =>
                 {
-                    b.Navigation("WordAudio");
+                    b.Navigation("Audio");
 
-                    b.Navigation("WordExamples");
+                    b.Navigation("Examples");
 
-                    b.Navigation("WordPictures");
+                    b.Navigation("Pictures");
 
-                    b.Navigation("WordTranscription");
+                    b.Navigation("Transcription");
 
-                    b.Navigation("WordTranslates");
+                    b.Navigation("Translates");
                 });
 #pragma warning restore 612, 618
         }

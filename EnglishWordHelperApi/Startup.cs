@@ -91,10 +91,8 @@ namespace EnglishWordHelperApi
 
 			//AutoMapper profiles
 			services.AddAutoMapper(typeof(WordProfile),
-								   typeof(WordAudioProfile),
 								   typeof(WordPictureProfile),
 								   typeof(WordExampleProfile),
-								   typeof(WordTranscriptionProfile),
 								   typeof(WordTranslateProfile));
 		}
 

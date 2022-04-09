@@ -11,6 +11,10 @@ namespace DAL.Configurations
             builder.Property(w => w.Example).IsRequired();
             builder.Property(w => w.Example).HasMaxLength(150);
 
+            builder.HasOne(we => we.Word)
+                   .WithMany(w => w.Examples)
+                   .HasForeignKey(w => w.WordId);
+
             builder.HasData(
             new WordExample
             {

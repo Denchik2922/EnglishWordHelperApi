@@ -6,10 +6,10 @@ namespace Models
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }
-		public WordTranscription WordTranscription { get; set; }
-		public WordAudio WordAudio { get; set; }
-		public ICollection<WordExample> WordExamples { get; set; }
-		public ICollection<WordTranslate> WordTranslates { get; set; }
-		public ICollection<WordPicture> WordPictures { get; set; }
+		public WordTranscription Transcription { get; set; }
+		public WordAudio Audio { get; set; }
+		public ICollection<WordExample> Examples { get; set; }
+		public ICollection<WordTranslate> Translates { get; set; }
+		public ICollection<WordPicture> Pictures { get; set; }
 	}
 }

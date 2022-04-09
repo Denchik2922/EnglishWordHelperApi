@@ -6,7 +6,7 @@ namespace EnglishWordHelperApi.Dtos
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }
-		public WordTranscriptionDto WordTranscription { get; set; }
-		public ICollection<WordTranslateDto> WordTranslates { get; set; }
+		public string Transcription { get; set; }
+		public ICollection<WordTranslateDto> Translates { get; set; }
 	}
 }

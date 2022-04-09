@@ -26,7 +26,7 @@ namespace EnglishWordHelperApi.Controllers
             {
                 return BadRequest("UserLogin object is null");
             }
-            var token = await _authService.Authenticate(loginModel.Username, loginModel.Password);
+            var token = await _authService.Authenticate(loginModel.Email, loginModel.Password);
 
             return Ok(token);
         }

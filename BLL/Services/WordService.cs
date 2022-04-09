@@ -58,18 +58,18 @@ namespace BLL.Services
 		private IQueryable<Word> GetWordQueryable()
 		{
 			return _context.Words
-						   .Include(w => w.WordTranscription)
-						   .Include(w => w.WordTranslates);
+						   .Include(w => w.Transcription)
+						   .Include(w => w.Translates);
 		}
 
 		private IQueryable<Word> GetWordWithAllIncludesQueryable()
 		{
 			return _context.Words
-						   .Include(w => w.WordAudio)
-						   .Include(w => w.WordTranscription)
-						   .Include(w => w.WordTranslates)
-						   .Include(w => w.WordExamples)
-						   .Include(w => w.WordPictures)
+						   .Include(w => w.Audio)
+						   .Include(w => w.Transcription)
+						   .Include(w => w.Translates)
+						   .Include(w => w.Examples)
+						   .Include(w => w.Pictures)
 						   .AsSplitQuery();
 		}
 

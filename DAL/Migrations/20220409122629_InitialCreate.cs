@@ -26,6 +26,8 @@ namespace DAL.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -268,12 +270,12 @@ namespace DAL.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "a1fa7133-9c6c-4d81-a416-90506de0cc6a", "7e36fb16-2b64-467c-a522-896908e7c108", "User", "USER" });
+                values: new object[] { "a14dac9e-4399-4cf0-b967-ad5d8fad22a6", "41192755-8aec-41fa-8368-d55fc8d4b790", "User", "USER" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "4eb72e0c-fb38-44be-b4c7-7dd9cd5799a0", "0d03707f-eeb8-402b-a2df-a59563d08bbc", "Admin", "ADMIN" });
+                values: new object[] { "04260d8f-9806-4a9a-abfe-3665aa2d8c91", "31df05b6-b6ac-4759-95b1-68db3accf3a6", "Admin", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "Words",

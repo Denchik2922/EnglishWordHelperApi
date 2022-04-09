@@ -11,6 +11,10 @@ namespace DAL.Configurations
             builder.Property(w => w.Name).IsRequired();
             builder.Property(w => w.Name).HasMaxLength(150);
 
+            builder.HasOne(we => we.Word)
+                   .WithMany(w => w.Translates)
+                   .HasForeignKey(w => w.WordId);
+
             builder.HasData(
             new WordTranslate
             {
