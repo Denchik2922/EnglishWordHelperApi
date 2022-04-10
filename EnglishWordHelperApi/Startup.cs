@@ -3,6 +3,7 @@ using BLL.Services;
 using DAL;
 using EnglishWordHelperApi.Infrastructure.Helpers;
 using EnglishWordHelperApi.Infrastructure.Profiles;
+using EnglishWordHelperApi.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Models;
+using Serilog;
 using System.Text;
 
 namespace EnglishWordHelperApi
@@ -97,7 +100,7 @@ namespace EnglishWordHelperApi
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<AppUser> userManager)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<AppUser> userManager, ILoggerFactory loggerFactory)
 		{
 			DbInitializerHelper.SeedAdmins(userManager, Configuration);
 
@@ -108,7 +111,11 @@ namespace EnglishWordHelperApi
 				app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "EnglishWordHelperApi v1"));
 			}
 
+			app.UseMiddleware<ExceptionMiddleware>(loggerFactory.CreateLogger(nameof(ExceptionMiddleware)));
+
 			app.UseHttpsRedirection();
+
+			app.UseSerilogRequestLogging();
 
 			app.UseRouting();
 
