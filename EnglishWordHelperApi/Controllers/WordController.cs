@@ -2,6 +2,7 @@
 using BLL.Interfaces;
 using BLL.RequestFeatures;
 using EnglishWordHelperApi.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Newtonsoft.Json;
@@ -12,6 +13,7 @@ namespace EnglishWordHelperApi.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
+    [Authorize]
 	public class WordController : ControllerBase
 	{
         private readonly IMapper _mapper;
@@ -34,11 +36,12 @@ namespace EnglishWordHelperApi.Controllers
             return Ok(wordsDto);
         }
 
+        [AllowAnonymous]
         [HttpGet("get-information/{wordName}")]
-        public async Task<ActionResult<WordDetailsDto>> GetByName(string wordName)
+        public async Task<ActionResult<WordForUserDto>> GetByName(string wordName)
         {
             var word = await _wordService.GetWordByName(wordName);
-            WordDetailsDto wordDto = _mapper.Map<WordDetailsDto>(word);
+            WordForUserDto wordDto = _mapper.Map<WordForUserDto>(word);
 
             return Ok(wordDto);
         }

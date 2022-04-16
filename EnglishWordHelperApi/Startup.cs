@@ -97,6 +97,8 @@ namespace EnglishWordHelperApi
 								   typeof(WordPictureProfile),
 								   typeof(WordExampleProfile),
 								   typeof(WordTranslateProfile));
+
+			services.AddCors();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -119,8 +121,13 @@ namespace EnglishWordHelperApi
 
 			app.UseRouting();
 
-			app.UseAuthorization();
 			app.UseAuthentication();
+			app.UseAuthorization();
+
+			app.UseCors(builder => builder.WithOrigins("https://localhost:5011")
+							.AllowAnyMethod()
+							.AllowAnyHeader()
+							.WithExposedHeaders("X-Pagination"));
 
 			app.UseEndpoints(endpoints =>
 			{
