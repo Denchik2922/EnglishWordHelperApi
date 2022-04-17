@@ -7,16 +7,19 @@ using EnglishWordHelperApi.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Models;
 using Serilog;
+using System.IO;
 using System.Text;
 
 namespace EnglishWordHelperApi
@@ -27,6 +30,7 @@ namespace EnglishWordHelperApi
 		public string JwtValidIssuer { get; }
 		public string JwtValidAudience { get; }
 		public string JwtSecret { get; }
+		public string StaticFileFolder { get; }
 
 		public Startup(IConfiguration configuration)
 		{
@@ -38,6 +42,7 @@ namespace EnglishWordHelperApi
 			JwtValidAudience = Configuration["JWTSettings:validAudience"];
 			JwtSecret = Configuration["JWTSettings:Secret"];
 
+			StaticFileFolder = Configuration["StaticFilesOptions:MainFolder"];
 		}
 
 		public IConfiguration Configuration { get; }
@@ -91,12 +96,10 @@ namespace EnglishWordHelperApi
 			services.AddScoped<IWordService, WordService>();
 			services.AddScoped<ITokenService, TokenService>();
 			services.AddScoped<IAuthService, AuthService>();
+			services.AddScoped<IUploadService, UploadService>();
 
 			//AutoMapper profiles
-			services.AddAutoMapper(typeof(WordProfile),
-								   typeof(WordPictureProfile),
-								   typeof(WordExampleProfile),
-								   typeof(WordTranslateProfile));
+			services.AddAutoMapper(typeof(WordProfile));
 
 			services.AddCors();
 		}
@@ -114,6 +117,13 @@ namespace EnglishWordHelperApi
 			}
 
 			app.UseMiddleware<ExceptionMiddleware>(loggerFactory.CreateLogger(nameof(ExceptionMiddleware)));
+
+			app.UseStaticFiles();
+			app.UseStaticFiles(new StaticFileOptions()
+			{
+				FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), StaticFileFolder)),
+				RequestPath = new PathString($"/{StaticFileFolder}")
+			});
 
 			app.UseHttpsRedirection();
 

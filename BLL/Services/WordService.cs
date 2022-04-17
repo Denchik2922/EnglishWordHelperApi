@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BLL.Exceptions;
+using BLL.Extensions;
 using BLL.Interfaces;
 using BLL.RequestFeatures;
 using DAL;
@@ -23,7 +24,8 @@ namespace BLL.Services
 
 		public async Task<PagedList<Word>> GetAllAsync(PaginationParameters parameters)
 		{
-			var words = GetWordQueryable();
+			var words = GetWordQueryable()
+						.Search(parameters.SearchTerm);
 
 			return await PagedList<Word>
 						 .ToPagedList(words, parameters.PageNumber, parameters.PageSize);

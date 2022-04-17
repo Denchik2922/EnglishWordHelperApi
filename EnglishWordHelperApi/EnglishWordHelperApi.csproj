@@ -33,6 +33,8 @@
 
   <ItemGroup>
     <Folder Include="Logs\" />
+    <Folder Include="Static\Images\" />
+    <Folder Include="Static\Audios\" />
   </ItemGroup>
 
 </Project>
